@@ -1,3 +1,7 @@
+"""
+Server module for the Emotion Detection application.
+Exposes a Flask-based API endpoint to evaluate text emotions using Watson NLP.
+"""
 from flask import Flask, render_template, request
 from EmotionDetection import emotion_detector
 
@@ -5,19 +9,23 @@ app = Flask(__name__)
 
 @app.route("/emotionDetector")
 def sent_analyzer():
+    """
+    Analyzes the input text parameter for emotions and returns
+    a formatted string output or an error message if invalid.
+    """
     text_to_analyze = request.args.get('textToAnalyze')
     response = emotion_detector(text_to_analyze)
-    
+
     anger = response['anger']
     disgust = response['disgust']
     fear = response['fear']
     joy = response['joy']
     sadness = response['sadness']
     dominant_emotion = response['dominant_emotion']
-    
+
     if dominant_emotion is None:
         return "Invalid text! Please try again!"
-        
+
     return (
         f"For the given statement, the system response is "
         f"'anger': {anger}, 'disgust': {disgust}, 'fear': {fear}, "
@@ -27,7 +35,11 @@ def sent_analyzer():
 
 @app.route("/")
 def render_index_page():
+    """
+    Renders the index HTML landing page.
+    """
     return render_template('index.html')
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
+    
